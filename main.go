@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -115,7 +116,7 @@ func GetVideoList(event string, url string) []Video {
 
 	videos := make([]Video, len(rawVideos))
 
-	for _, v := range rawVideos {
+	for i, v := range rawVideos {
 		title := v.Title
 		if v.Subtitle != "" {
 			title += " — " + v.Subtitle
@@ -124,7 +125,7 @@ func GetVideoList(event string, url string) []Video {
 		tags := strings.Split(v.Keywords, ", ")
 
 		video := Video{event, tags[1], title, v.Link, v.Enclosure.URL}
-		videos = append(videos, video)
+		videos[i] = video
 	}
 
 	return videos
@@ -135,7 +136,15 @@ func PrintVideo(video Video) {
 	fmt.Println(video.ShortLink)
 	fmt.Println(video.Link)
 	fmt.Println()
+}
+
+func PrintJson(video Video) {
+	v, err := json.Marshal(video)
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	fmt.Printf("%s\n", v)
 }
 
 func main() {
