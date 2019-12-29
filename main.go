@@ -107,6 +107,13 @@ func main() {
 	videos := rss.Channel.Item
 
 	for _, v := range videos {
-		fmt.Printf("%v\n", v.Title)
+		if v.Subtitle != "" {
+			fmt.Printf("%s – %s\n", v.Title, v.Subtitle)
+		} else {
+			fmt.Println(v.Title)
+		}
+
+		fmt.Println("Tags:", v.Keywords)
+		fmt.Println()
 	}
 }
