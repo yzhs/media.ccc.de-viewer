@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -100,7 +101,7 @@ func main() {
 
 	rss, err := DownloadFeed(url)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	videos := rss.Channel.Item
