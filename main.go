@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func feedUrl(event string) string {
@@ -96,24 +97,44 @@ type Rss struct {
 	} `xml:"channel"`
 }
 
-func main() {
-	url := feedUrl("36c3")
+type Video struct {
+	Event     string `json:"event"`
+	Id        string `json:"id"`
+	Title     string `json:"string"`
+	ShortLink string `json:"short_link"`
+	Link      string `json:"link"`
+}
 
+func ListVideos(event string, url string) {
 	rss, err := DownloadFeed(url)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	videos := rss.Channel.Item
+	rawVideos := rss.Channel.Item
 
-	for _, v := range videos {
+	videos := make([]Video, len(rawVideos))
+
+	for _, v := range rawVideos {
+		title := v.Title
 		if v.Subtitle != "" {
-			fmt.Printf("%s – %s\n", v.Title, v.Subtitle)
-		} else {
-			fmt.Println(v.Title)
+			title += " — " + v.Subtitle
 		}
 
-		fmt.Println("Tags:", v.Keywords)
+		tags := strings.Split(v.Keywords, ", ")
+		video := Video{event, tags[1], title, v.Link, v.Enclosure.URL}
+		videos = append(videos, video)
+
+		fmt.Println(video.Id, video.Title)
+		fmt.Println(video.ShortLink)
+		fmt.Println(video.Link)
 		fmt.Println()
 	}
+}
+
+func main() {
+	event := "36c3"
+	url := feedUrl(event)
+
+	ListVideos(event, url)
 }
