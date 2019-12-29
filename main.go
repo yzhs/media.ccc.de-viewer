@@ -105,7 +105,7 @@ type Video struct {
 	Link      string `json:"link"`
 }
 
-func ListVideos(event string, url string) {
+func GetVideoList(event string, url string) []Video {
 	rss, err := DownloadFeed(url)
 	if err != nil {
 		log.Fatal(err)
@@ -122,9 +122,16 @@ func ListVideos(event string, url string) {
 		}
 
 		tags := strings.Split(v.Keywords, ", ")
+
 		video := Video{event, tags[1], title, v.Link, v.Enclosure.URL}
 		videos = append(videos, video)
+	}
 
+	return videos
+}
+
+func PrintVideoList(videos []Video) {
+	for _, video := range videos {
 		fmt.Println(video.Id, video.Title)
 		fmt.Println(video.ShortLink)
 		fmt.Println(video.Link)
@@ -136,5 +143,7 @@ func main() {
 	event := "36c3"
 	url := feedUrl(event)
 
-	ListVideos(event, url)
+	videos := GetVideoList(event, url)
+
+	PrintVideoList(videos)
 }
