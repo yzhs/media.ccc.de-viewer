@@ -154,6 +154,6 @@ func main() {
 	videos := GetVideoList(event, url)
 
 	for _, video := range videos {
-		PrintVideo(video)
+		PrintJson(video)
 	}
 }
