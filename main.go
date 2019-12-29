@@ -28,6 +28,32 @@ func DownloadFeed(url string) (Rss, error) {
 	return result, err
 }
 
+type Item struct {
+	Text        string `xml:",chardata"`
+	Title       string `xml:"title"`
+	Link        string `xml:"link"`
+	Description string `xml:"description"`
+	Enclosure   struct {
+		Text   string `xml:",chardata"`
+		URL    string `xml:"url,attr"`
+		Length string `xml:"length,attr"`
+		Type   string `xml:"type,attr"`
+	} `xml:"enclosure"`
+	PubDate string `xml:"pubDate"`
+	Guid    struct {
+		Text        string `xml:",chardata"`
+		IsPermaLink string `xml:"isPermaLink,attr"`
+	} `xml:"guid"`
+	Identifier string `xml:"identifier"`
+	Date       string `xml:"date"`
+	Author     string `xml:"author"`
+	Explicit   string `xml:"explicit"`
+	Keywords   string `xml:"keywords"`
+	Summary    string `xml:"summary"`
+	Duration   string `xml:"duration"`
+	Subtitle   string `xml:"subtitle"`
+}
+
 type Rss struct {
 	XMLName   xml.Name `xml:"rss"`
 	Text      string   `xml:",chardata"`
@@ -50,31 +76,7 @@ type Rss struct {
 			Title string `xml:"title"`
 			Link  string `xml:"link"`
 		} `xml:"image"`
-		Item []struct {
-			Text        string `xml:",chardata"`
-			Title       string `xml:"title"`
-			Link        string `xml:"link"`
-			Description string `xml:"description"`
-			Enclosure   struct {
-				Text   string `xml:",chardata"`
-				URL    string `xml:"url,attr"`
-				Length string `xml:"length,attr"`
-				Type   string `xml:"type,attr"`
-			} `xml:"enclosure"`
-			PubDate string `xml:"pubDate"`
-			Guid    struct {
-				Text        string `xml:",chardata"`
-				IsPermaLink string `xml:"isPermaLink,attr"`
-			} `xml:"guid"`
-			Identifier string `xml:"identifier"`
-			Date       string `xml:"date"`
-			Author     string `xml:"author"`
-			Explicit   string `xml:"explicit"`
-			Keywords   string `xml:"keywords"`
-			Summary    string `xml:"summary"`
-			Duration   string `xml:"duration"`
-			Subtitle   string `xml:"subtitle"`
-		} `xml:"item"`
+		Item      []Item `xml:"item"`
 		Generator string `xml:"generator"`
 		Category  struct {
 			Text     string `xml:",chardata"`
