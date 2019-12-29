@@ -130,12 +130,11 @@ func GetVideoList(event string, url string) []Video {
 	return videos
 }
 
-func PrintVideoList(videos []Video) {
-	for _, video := range videos {
-		fmt.Println(video.Id, video.Title)
-		fmt.Println(video.ShortLink)
-		fmt.Println(video.Link)
-		fmt.Println()
+func PrintVideo(video Video) {
+	fmt.Println(video.Id, video.Title)
+	fmt.Println(video.ShortLink)
+	fmt.Println(video.Link)
+	fmt.Println()
 	}
 }
 
@@ -145,5 +144,7 @@ func main() {
 
 	videos := GetVideoList(event, url)
 
-	PrintVideoList(videos)
+	for _, video := range videos {
+		PrintVideo(video)
+	}
 }
