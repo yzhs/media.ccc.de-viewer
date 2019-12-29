@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -147,8 +148,7 @@ func PrintJson(video Video) {
 	fmt.Printf("%s\n", v)
 }
 
-func main() {
-	event := "36c3"
+func ListVideos(event string) {
 	url := feedUrl(event)
 
 	videos := GetVideoList(event, url)
@@ -156,4 +156,24 @@ func main() {
 	for _, video := range videos {
 		PrintJson(video)
 	}
+}
+
+func Usage() {
+	fmt.Printf("Usage: %s list <event>\n", os.Args[0])
+}
+
+func main() {
+	if len(os.Args) < 3 {
+		Usage()
+		return
+	}
+
+	command := os.Args[1]
+	if command != "list" {
+		Usage()
+		return
+	}
+
+	event := os.Args[2]
+	ListVideos(event)
 }
